@@ -1,24 +1,28 @@
 name: Container Workflow
-on: workflow_dispatch
+
+on:
+  workflow_dispatch:
+
 env:
   acr_Li_ser: aistraining.azurecr.io
-  tagname : eShopOnWeb026:1.0.0
+  tagname: eShopOnWeb026:1.0.0
+
 jobs:
   build-container:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ch our sc
-        uses: actions/checkout@v7.0.0
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-      - name: ACR login
-        uses: docker/login-action@v4.4.0
+      - name: ACR Login
+        uses: docker/login-action@v4
         with:
-          registry: ${{ env.acr_Li_ser}}
-          username: ${{secrets.ACR_USER}}
-          password: ${{secrets.ACR_PASS}}
+          registry: ${{ env.acr_Li_ser }}
+          username: ${{ secrets.ACR_USER }}
+          password: ${{ secrets.ACR_PASS }}
 
       - name: Build and Push
-        run: 
-          docker build . -t ${{ env.acr_Li_ser}}/${{env.tagname}}
-          docker push ${{ env.acr_Li_ser}}/${{env.tagname}}
+        run: |
+          docker build -t ${{ env.acr_Li_ser }}/${{ env.tagname }} .
+          docker push ${{ env.acr_Li_ser }}/${{ env.tagname }}
