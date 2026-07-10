@@ -6,7 +6,7 @@ on:
 env:
   acr_Li_ser: aistraining.azurecr.io
   tagname: eshoponweb026:1.0.0
-  resgroup: rg-026
+  resgroup: ais-training
   ct_name: aks-demo
 
 jobs:
