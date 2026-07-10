@@ -21,7 +21,14 @@ jobs:
           registry: ${{ env.acr_Li_ser }}
           username: ${{ secrets.ACR_USER }}
           password: ${{ secrets.ACR_PASS }}
-
+      - name: Show repository files
+        run: |
+          pwd
+          ls -R
+      - name: Find Dockerfile
+        run: |
+         find . -name "Dockerfile"
+          
       - name: Build and Push
         run: |
           docker build -t ${{ env.acr_Li_ser }}/${{ env.tagname }} ./
