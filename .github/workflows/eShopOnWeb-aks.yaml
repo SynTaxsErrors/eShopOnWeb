@@ -49,9 +49,17 @@ jobs:
           creds: ${{ secrets.AZCREDEN }}
           resource-group: ${{env.resgroup}}
           cluster-name: ${{env.ct_name}}
+
+      - uses: azure/k8s-create-secret@v1
+        with: 
+          container-registry-url: ${{ env.acr_Li_ser }}
+          container-registry-name: aistraining
+          container-registry-password: ${{ secrets.ACR_PASS }}
+          secret-name: aks-secret
+          
       - uses: azure/k8s-deploy@v1
         with:
           maifests: |
             .k8s/deployment.yaml
             .k8s/service.yaml
-            images: ${{ env.acr_Li_ser }}/${{ env.tagname }}
+         images: ${{ env.acr_Li_ser }}/${{ env.tagname }}
