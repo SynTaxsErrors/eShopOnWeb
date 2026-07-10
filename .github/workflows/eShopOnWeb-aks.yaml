@@ -5,7 +5,7 @@ on:
 
 env:
   acr_Li_ser: aistraining.azurecr.io
-  tagname: eShopOnWeb026:1.0.0
+  tagname: eshoponweb026:1.0.0
 
 jobs:
   build-container:
