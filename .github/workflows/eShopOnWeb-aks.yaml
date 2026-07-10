@@ -6,6 +6,8 @@ on:
 env:
   acr_Li_ser: aistraining.azurecr.io
   tagname: eshoponweb026:1.0.0
+  resgroup: rg-026
+  ct_name: aks-demo
 
 jobs:
   build-container:
@@ -13,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.0
 
       - name: ACR Login
         uses: docker/login-action@v4
@@ -21,15 +23,35 @@ jobs:
           registry: ${{ env.acr_Li_ser }}
           username: ${{ secrets.ACR_USER }}
           password: ${{ secrets.ACR_PASS }}
+
       - name: Show repository files
         run: |
           pwd
           ls -R
+
       - name: Find Dockerfile
         run: |
-         find . -name "Dockerfile"
-          
+          find . -name "Dockerfile"
+
       - name: Build and Push
         run: |
           docker build -f ./src/Web/Dockerfile -t ${{ env.acr_Li_ser }}/${{ env.tagname }} .
           docker push ${{ env.acr_Li_ser }}/${{ env.tagname }}
+
+  deploy-to-aks:
+    runs-on: ubuntu-latest
+    needs: build-container
+
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIAL }}
+          resource-group: ${{env.resgroup}}
+          cluster-name: ${{env.ct_name}}
+      - uses: azure/k8s-deploy@v1
+        with:
+          maifests: |
+            .k8s/deployment.yaml
+            .k8s/service.yaml
+            images: ${{ env.acr_Li_ser }}/${{ env.tagname }}
