@@ -31,5 +31,5 @@ jobs:
           
       - name: Build and Push
         run: |
-          docker build -t ${{ env.acr_Li_ser }}/${{ env.tagname }} ./src/PublicApi/Dockerfile
+          docker build -f /src/Web/Dockerfile -t ${{ env.acr_Li_ser }}/${{ env.tagname }} ./src/PublicApi/Dockerfile .
           docker push ${{ env.acr_Li_ser }}/${{ env.tagname }}
